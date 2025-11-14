@@ -69,5 +69,27 @@ namespace MovieRental.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all rentals.
+        /// </summary>
+        /// <returns>All rentals</returns>
+        /// <response code="200">Returns OK with rentals</response>
+        /// <response code="500">Server error</response>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var rentals = await _features.GetAllRentals();
+                return Ok(rentals);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
+        }
+
     }
 }

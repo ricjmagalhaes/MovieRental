@@ -23,11 +23,11 @@ namespace MovieRental.Controllers
         /// <remarks>
         /// Exemplo de request:
         /// 
-        ///     GET /api/rentals
+        ///     GET /api/Movies
         /// 
         /// </remarks>
-        /// <returns>Lista de alugueres</returns>
-        /// <response code="200">Retorna a lista com sucesso    </response>
+        /// <returns>Lista de filmes</returns>
+        /// <response code="200">Retorna a lista com sucesso</response>
         /// <response code="500">Erro interno no servidor</response>
         //[HttpGet]
         //[ProducesResponseType(StatusCodes.Status200OK)]

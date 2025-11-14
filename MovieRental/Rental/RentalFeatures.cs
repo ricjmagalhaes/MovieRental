@@ -92,6 +92,14 @@ namespace MovieRental.Rental
                .Where(r => r.Customer != null && EF.Functions.Like(r.Customer.Name, $"%{customerName}%"))
                .ToListAsync();
         }
+         
+        public async Task<IEnumerable<Rental>> GetAllRentals()
+        {
+            return await _movieRentalDb.Rentals
+                .Include(r => r.Customer)
+                .Include(r => r.Movie)
+                .ToListAsync();
+        }
 
-	}
+    }
 }
