@@ -9,10 +9,12 @@ namespace MovieRental.Controllers
     {
 
         private readonly IMovieFeatures _features;
+        private readonly ILogger<MovieController> _logger;
 
-        public MovieController(IMovieFeatures features)
+        public MovieController(IMovieFeatures features, ILogger<MovieController> logger)
         {
             _features = features;
+            _logger = logger;
         }
 
         /// <summary>
@@ -32,7 +34,8 @@ namespace MovieRental.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Get()
         {
-	        return Ok(_features.GetAll());
+            _logger.LogInformation($"Getting all movies at {DateTime.Now}");
+            return Ok(_features.GetAll());
         }
 
         /// <summary>
@@ -47,7 +50,8 @@ namespace MovieRental.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult Post([FromBody] Movie.Movie movie)
         {
-	        return Ok(_features.Save(movie));
+            _logger.LogInformation($"Save new movies {movie.Title}");
+            return Ok(_features.Save(movie));
         }
     }
 }

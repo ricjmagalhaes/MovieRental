@@ -1,7 +1,9 @@
+using MovieRental.Customer;
 using MovieRental.Data;
 using MovieRental.Movie;
 using MovieRental.PaymentProviders;
 using MovieRental.Rental;
+using Serilog;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,9 @@ builder.Services.AddScoped<IRentalFeatures, RentalFeatures>();
 builder.Services.AddScoped<IPaymentProvider, MbWayProvider>();
 builder.Services.AddScoped<IPaymentProvider, PayPalProvider>();
 
+builder.Services.AddScoped<IMovieFeatures, MovieFeatures>();
+builder.Services.AddScoped<ICustomerFeatures, CustomerFeatures>();
+
 //Use on swagger xml comments
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -31,10 +36,14 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-// Logging configurado por default
+// Logging by default
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
-builder.Logging.AddDebug();
+builder.Logging.AddDebug(); 
+  
+
+// Use Serilog on host builder
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

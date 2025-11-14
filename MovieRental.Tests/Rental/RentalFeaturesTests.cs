@@ -22,7 +22,7 @@ namespace MovieRental.Tests.Rental
             var providers = new List<IPaymentProvider> { mockProvider.Object };
 
             using var _movieRentalDb = new MovieRentalDbContext();
-            var features = new RentalFeatures(_movieRentalDb, providers);
+            var features = new RentalFeatures(_movieRentalDb, providers, );
 
             var customer = new Customer.Customer { Id = 1, Name = "Ricardo Magalhaes" };
 

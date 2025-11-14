@@ -18,10 +18,10 @@ namespace MovieRental.Movie
 		}
 
         // TODO: tell us what is wrong in this method? Forget about the async, what other concerns do you have?
-        //Muita abstracao no metodo, muito generico, nao deixa claro o que o metodo faz
-        //Deveria ser algo como GetAllMovies ou GetAllMovieTitles etc
-        //Isto devolve entidades que ainda estão ligadas ao contexto do EF
-        //Pode levar a problemas de performance e de memoria tipo Lazy Loading
+        //Too much abstraction in the method, too generic, it doesn't make it clear what the method does
+        //It should be something like GetAllMovies or GetAllMovieTitles etc.
+        //This returns entities that are still tied to the EF context.
+        //This can lead to performance and memory issues like lazy loading.
         public List<Movie> GetAll()
 		{
             //return _movieRentalDb.Movies.ToList();
