@@ -1,7 +1,14 @@
-﻿namespace MovieRental.Rental;
+﻿using System.Threading.Tasks;
+
+namespace MovieRental.Rental;
 
 public interface IRentalFeatures
-{
-	Rental Save(Rental rental);
-	IEnumerable<Rental> GetRentalsByCustomerName(string customerName);
+{ 
+    Task<Rental> Save(Rental rental);
+
+    Task<Rental> ProcessPayment(Rental rental);
+     
+    Task<IEnumerable<Rental>> GetRentalsByCustomerName(string customerName);
+
+
 }

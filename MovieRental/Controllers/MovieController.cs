@@ -15,13 +15,36 @@ namespace MovieRental.Controllers
             _features = features;
         }
 
+        /// <summary>
+        /// Obtém todos os filmes.
+        /// </summary>
+        /// <remarks>
+        /// Exemplo de request:
+        /// 
+        ///     GET /api/rentals
+        /// 
+        /// </remarks>
+        /// <returns>Lista de alugueres</returns>
+        /// <response code="200">Retorna a lista com sucesso    </response>
+        /// <response code="500">Erro interno no servidor</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult Get()
         {
 	        return Ok(_features.GetAll());
         }
 
+        /// <summary>
+        /// Cria um novo filme.
+        /// </summary>
+        /// <param name="movie">Objeto FILME a ser criado</param>
+        /// <returns>O filme criado</returns>
+        /// <response code="200">Retorna OK com sucesso</response>
+        /// <response code="400">Erro na validação dos dados</response> 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public IActionResult Post([FromBody] Movie.Movie movie)
         {
 	        return Ok(_features.Save(movie));
