@@ -21,7 +21,7 @@ namespace MovieRental.Rental
         public async Task<Rental> Save(Rental rental)
         {
 			_movieRentalDb.Rentals.Add(rental);
-			_movieRentalDb.SaveChangesAsync();
+			await _movieRentalDb.SaveChangesAsync();
 			return rental;
 		}
 
@@ -43,27 +43,40 @@ namespace MovieRental.Rental
              
             if (provider == null)
             {
-                _logger.LogWarning($"Payment provider '{rental.PaymentMethod}' not found for customer {rental.Customer.Name}");
-                throw new InvalidOperationException($"Payment provider '{rental.PaymentMethod}' not supported.");
+                _logger.LogWarning($"Payment provider '{rental.PaymentMethod}' not found for customer {rental?.Customer?.Name}");
+                throw new InvalidOperationException($"Payment provider '{rental?.PaymentMethod}' not supported.");
             }
 
-            _logger.LogInformation($"Processing rental for {rental.Customer.Name} using {rental.PaymentMethod}");
+            _logger.LogInformation($"Processing rental for {rental?.Customer?.Name} using {rental?.PaymentMethod}");
 
             // Process the payment before saving
-            var success = await provider.Pay(rental.Price);
-
-            if (!success)
+            try
             {
-                _logger.LogWarning($"Payment failed for customer {rental.Customer.Name} (amount: {rental.Price})");
+                var success = await provider.Pay(rental.Price);
 
-                throw new InvalidOperationException("Payment failed. Rental not created.");
+                if (!success)
+                {
+                    _logger.LogWarning($"Payment failed for customer {rental?.Customer?.Name} (amount: {rental?.Price})");
+
+                    throw new InvalidOperationException("Payment failed. Rental not created.");
+                }
+            } 
+            catch (PaymentFailedException) 
+            {
+                // Re-throw known payment exceptions without wrapping
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Payment provider {provider.Name} call failed for customer {customerName}");
+                throw new PaymentFailedException("Payment provider error occurred.", ex);
             }
 
             //Only persist if payment succeeded
             _movieRentalDb.Rentals.Add(rental);
             await _movieRentalDb.SaveChangesAsync();
 
-            _logger.LogInformation($"Rental saved successfully for customer {rental.Customer.Name}");
+            _logger.LogInformation($"Rental saved successfully for customer {rental?.Customer?.Name}");
             return rental;
         }
 

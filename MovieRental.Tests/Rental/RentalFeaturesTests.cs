@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
+using MovieRental.Customer;
 using MovieRental.Data;
+using MovieRental.Movie;
 using MovieRental.PaymentProviders;
 using MovieRental.Rental;
 using System;
@@ -22,15 +25,22 @@ namespace MovieRental.Tests.Rental
             var providers = new List<IPaymentProvider> { mockProvider.Object };
 
             using var _movieRentalDb = new MovieRentalDbContext();
-            var features = new RentalFeatures(_movieRentalDb, providers, );
+            var loggerFactory = LoggerFactory.Create(builder => { });
+            var log = new Logger<RentalFeatures>(loggerFactory);
+            var features = new RentalFeatures(_movieRentalDb, providers, log);
 
             var customer = new Customer.Customer { Id = 1, Name = "Ricardo Magalhaes" };
+            var movies = new Movie.Movie { Id = 1, Title = "Matrix" };
 
-            var rental = new Rental.Rental
+            var rental = new MovieRental.Rental.Rental 
             {
-                Id = 1, CustomerId = 1,
+                Id = 1,
+                DaysRented = 1,
+                Movie = movies,
+                MovieId = 1,
                 PaymentMethod = "MbPay",
-                Amount = 200,
+                Price = 200,
+                CustomerId = 1,
                 Customer = customer
             };
 
@@ -53,9 +63,24 @@ namespace MovieRental.Tests.Rental
             var providers = new List<IPaymentProvider> { mockProvider.Object };
 
             using var _movieRentalDb = new MovieRentalDbContext();
-            var features = new RentalFeatures(_movieRentalDb, providers);
+             
+            var loggerFactory = LoggerFactory.Create(builder => { });
+            var log = new Logger<RentalFeatures>(loggerFactory);
+            var features = new RentalFeatures(_movieRentalDb, providers, log);
 
-            var rental = new Rental.Rental { PaymentMethod = "MbPay", Amount = 100m };
+            var customer = new Customer.Customer { Id = 1, Name = "Ricardo Magalhaes" };
+            var movies = new Movie.Movie { Id = 1, Title = "Matrix" };
+            var rental = new MovieRental.Rental.Rental
+            {
+                Id = 1,
+                DaysRented = 1,
+                Movie = movies,
+                MovieId = 1,
+                PaymentMethod = "MbPay",
+                Price = 200,
+                CustomerId = 1,
+                Customer = customer
+            };
 
             // Act
             var result = await features.ProcessPayment(rental);

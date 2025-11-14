@@ -44,10 +44,11 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
- 
-
+  
 var app = builder.Build();
 
+app.UseMiddleware<MovieRental.Middleware.ExceptionHandling>();
+ 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
