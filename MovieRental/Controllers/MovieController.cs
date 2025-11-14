@@ -29,14 +29,43 @@ namespace MovieRental.Controllers
         /// <returns>Lista de alugueres</returns>
         /// <response code="200">Retorna a lista com sucesso    </response>
         /// <response code="500">Erro interno no servidor</response>
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //public IActionResult Get()
+        //{
+        //    _logger.LogInformation($"Getting all movies at {DateTime.Now}");
+        //    return Ok(_features.GetAll());
+        //}
+
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
             _logger.LogInformation($"Getting all movies at {DateTime.Now}");
-            return Ok(_features.GetAll());
+            var movies = await _features.GetAllAsync();
+
+            return Ok(movies);
         }
+
+
+        ///// <summary>
+        ///// Cria um novo filme.
+        ///// </summary>
+        ///// <param name="movie">Objeto FILME a ser criado</param>
+        ///// <returns>O filme criado</returns>
+        ///// <response code="200">Retorna OK com sucesso</response>
+        ///// <response code="400">Erro na validação dos dados</response> 
+        //[HttpPost]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)] 
+        //public IActionResult Post([FromBody] Movie.Movie movie)
+        //{
+        //    _logger.LogInformation($"Save new movies {movie.Title}");
+        //    return Ok(_features.Save(movie));
+        //}
 
         /// <summary>
         /// Cria um novo filme.
@@ -47,11 +76,11 @@ namespace MovieRental.Controllers
         /// <response code="400">Erro na validação dos dados</response> 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
-        public IActionResult Post([FromBody] Movie.Movie movie)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> PostAsync([FromBody] Movie.Movie movie)
         {
-            _logger.LogInformation($"Save new movies {movie.Title}");
-            return Ok(_features.Save(movie));
+            _logger.LogInformation($"SaveAsync new movies {movie.Title}");
+            return Ok(_features.SaveAsync(movie));
         }
     }
 }

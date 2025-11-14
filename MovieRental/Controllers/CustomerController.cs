@@ -61,6 +61,7 @@ namespace MovieRental.Controllers
 
             try
             {
+                _logger.LogDebug($"Try Create CustomerName: {customer.Name}");
                 var created = await _features.SaveAsync(customer);
                 return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
             }

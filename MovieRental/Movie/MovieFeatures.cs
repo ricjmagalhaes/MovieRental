@@ -1,4 +1,5 @@
-﻿using MovieRental.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieRental.Data;
 
 namespace MovieRental.Movie
 {
@@ -16,6 +17,13 @@ namespace MovieRental.Movie
 			_movieRentalDb.SaveChanges();
 			return movie;
 		}
+		
+		public async Task<Movie> SaveAsync(Movie movie)
+		{
+			await _movieRentalDb.Movies.AddAsync(movie);
+			_movieRentalDb.SaveChanges();
+			return movie;
+		}
 
         // TODO: tell us what is wrong in this method? Forget about the async, what other concerns do you have?
         //Too much abstraction in the method, too generic, it doesn't make it clear what the method does
@@ -30,6 +38,12 @@ namespace MovieRental.Movie
 				.ToList();
         }
 
+        public async Task<List<Movie>> GetAllAsync()
+        { 
+            return await _movieRentalDb.Movies
+                .Select(m => new Movie { Id = m.Id, Title = m.Title })
+                .ToListAsync();
+        }
 
-	}
+    }
 }

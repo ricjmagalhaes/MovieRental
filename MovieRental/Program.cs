@@ -8,6 +8,15 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Use Serilog 
+// Configure Serilog from configuration and replace the default logger
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Host.UseSerilog();
+
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -35,15 +44,7 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
-
-// Logging by default
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-builder.Logging.AddDebug(); 
-  
-
-// Use Serilog on host builder
-builder.Host.UseSerilog();
+ 
 
 var app = builder.Build();
 
